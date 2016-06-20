@@ -23,6 +23,10 @@ keys = {
         "post_office": {
             "category": "Postamt",
             "icon": "postal"
+        },
+        "school": {
+            "category": "Schule",
+            "icon": "school"
         }
     }
 }
@@ -39,7 +43,6 @@ if not os.path.isfile("response.geo.json") or True:
             pprint(icon)
 
     request += ");"
-    exit()
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
     with open('response.geo.json', 'w') as outfile:

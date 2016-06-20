@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Karte von Schiltern</title>
+    <title>POIs in Schiltern</title>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
     <style>
         body {
@@ -44,27 +44,9 @@
     var categories = {},
             category;
 
-    function icon(input) {
-        var icon;
-        switch (input) {
-            case 'Ferienhaus' :
-                icon = "house";
-                break;
-
-            case 'bakery' :
-                icon = "bread";
-                break;
-            case 'supermarket' :
-                icon = "supermarket";
-                break;
-            default:
-                icon = "postal";
-        }
-        return icon;
-    }
     var geojsonLayer = L.geoJson(null, {
         pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {icon: new LeafIcon({iconUrl: 'icons/' + icon(feature.properties.tags.shop) + '.png'})});
+            return L.marker(latlng, {icon: new LeafIcon({iconUrl: 'images/' + feature.properties.own.icon + '.png'})});
         },
         onEachFeature: function (feature, layer) {
             // Check if feature is a polygon
@@ -77,12 +59,12 @@
                 // Get center of bounds
                 var center = layer.getBounds().getCenter();
                 // Use center to put marker on map
-                var layer = L.marker(center, {icon: new LeafIcon({iconUrl: 'icons/' + icon(feature.properties.tags.shop) + '.png'})}).addTo(map);
+                layer = L.marker(center, {icon: new LeafIcon({iconUrl: 'images/' + feature.properties.own.icon + '.png'})}).addTo(map);
             } else {
             }
-            layer.bindPopup(feature.properties.tags.name);
+            layer.bindPopup(feature.properties.name);
 
-            category = feature.properties.tags.shop;
+            category = feature.properties.own.category;
             // Initialize the category array if not already set.
             if (typeof categories[category] === "undefined") {
                 categories[category] = [];
@@ -100,38 +82,11 @@
     };
     var overlays = {};
     var categoryName, categoryArray, categoryLG;
-    var area = "(48.44320894553832,15.552864074707033,48.5501374010859,15.755767822265625)";
-    var overpass = "[out:json][timeout:25];(";
-    var tags = {
-        "shop": [
-            "bakery",
-            "supermarket"
-        ],
-        "amenity": [
-            "post_office"
-        ]
-    };
-    for (tag in tags) {
-        if (tags.hasOwnProperty(tag)) {
-            var values = tags[tag];
-            var arrayLength = values.length;
-            for (var i = 0; i < arrayLength; i++) {
-                console.log(tag + "=" + values[i]);
-                var osm = "'" + tag + "'='" + values[i] + "'";
-                overpass += "node[" + osm + "]" + area + ";way[" + osm + "]" + area + ";"
-            }
-        }
-    }
-    //    "node['shop']" + area + ";way['shop']" + area + ";"
-    overpass += ");out body;>;out skel qt;";
-    var url = "https://overpass-api.de/api/interpreter?data=" + encodeURI(overpass);
-    console.log(overpass);
     $.ajax({
         dataType: "json",
-        url: url,
+        url: "poi.json",
         success: function (data) {
-            var geojson = osmtogeojson(data);
-            geojsonLayer.addData(geojson);
+            geojsonLayer.addData(data);
             map.fitBounds(geojsonLayer.getBounds());
             for (categoryName in categories) {
                 categoryArray = categories[categoryName];
