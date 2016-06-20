@@ -1,22 +1,32 @@
 #!/bin/python3
 from pprint import pprint
+import os.path
+import shutil
 import overpass
 import json
-import os.path
 import statistics
 from shapely.geometry.polygon import LinearRing
 
 area = "(48.44320894553832,15.552864074707033,48.5501374010859,15.755767822265625)"
 keys = {
-    "shop": [
-        "bakery",
-        "supermarket"
-    ],
-    "amenity": [
-        "post_office"
-    ]
+    "shop": {
+        "bakery": {
+            "category": "Bäkerei",
+            "icon": "bread"
+        },
+        "supermarket": {
+            "category": "Supermarkt",
+            "icon": "supermarket"
+        }
+    },
+    "amenity": {
+        "post_office": {
+            "category": "Postamt",
+            "icon": "postal"
+        }
+    }
 }
-if not os.path.isfile("response.geo.json"):
+if not os.path.isfile("response.geo.json") or True:
     request = "("
     for key in keys:
         values = keys[key]
@@ -24,9 +34,12 @@ if not os.path.isfile("response.geo.json"):
             print(key + ":" + value)
             keyValue = "'" + key + "'='" + value + "'"
             request += "node[" + keyValue + "]" + area + ";way[" + keyValue + "]" + area + ";"
+            icon = keys[key][value]["icon"]
+            shutil.copyfile("icons/" + icon + ".png", "images/" + icon + ".png")
+            pprint(icon)
 
     request += ");"
-
+    exit()
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
     with open('response.geo.json', 'w') as outfile:
@@ -37,14 +50,14 @@ else:
         data = json.load(inputfile)
 
 for feature in data["features"]:
-    if feature["geometry"]["type"] == "Point":
-        print("Point")
-    else:
+    if feature["geometry"]["type"] == "LineString":
         ring = LinearRing(feature["geometry"]["coordinates"])
         ctr = list(ring.centroid.coords)[0]
         feature["geometry"]["coordinates"] = ctr
         feature["geometry"]["type"] = "Point"
-        pprint(feature["geometry"])
+    searchKey = list(set(keys).intersection(feature["properties"]))[0]
+    searchValue = feature["properties"][searchKey]
+    feature["properties"]["own"] = keys[searchKey][searchValue]
 
-with open('test.geo.json', 'w') as outfile:
+with open('poi.json', 'w') as outfile:
     json.dump(data, outfile, indent=4, sort_keys=True)
