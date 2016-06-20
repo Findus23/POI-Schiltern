@@ -1,47 +1,24 @@
 #!/bin/python3
-from pprint import pprint
+import json
 import os.path
 import shutil
-import overpass
-import json
-import statistics
-from shapely.geometry.polygon import LinearRing
+from pprint import pprint
 
-area = "(48.44320894553832,15.552864074707033,48.5501374010859,15.755767822265625)"
-keys = {
-    "shop": {
-        "bakery": {
-            "category": "Bäkerei",
-            "icon": "bread"
-        },
-        "supermarket": {
-            "category": "Supermarkt",
-            "icon": "supermarket"
-        }
-    },
-    "amenity": {
-        "post_office": {
-            "category": "Postamt",
-            "icon": "postal"
-        },
-        "school": {
-            "category": "Schule",
-            "icon": "school"
-        }
-    }
-}
-if not os.path.isfile("response.geo.json") or True:
+import overpass
+from shapely.geometry.polygon import LinearRing, LineString
+
+from settings import *
+
+if not os.path.isfile("response.geo.json"):
     request = "("
     for key in keys:
         values = keys[key]
         for value in values:
-            print(key + ":" + value)
             keyValue = "'" + key + "'='" + value + "'"
+            print(keyValue)
             request += "node[" + keyValue + "]" + area + ";way[" + keyValue + "]" + area + ";"
             icon = keys[key][value]["icon"]
             shutil.copyfile("icons/" + icon + ".png", "images/" + icon + ".png")
-            pprint(icon)
-
     request += ");"
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
@@ -54,13 +31,21 @@ else:
 
 for feature in data["features"]:
     if feature["geometry"]["type"] == "LineString":
-        ring = LinearRing(feature["geometry"]["coordinates"])
+        if len(feature["geometry"]["coordinates"]) == 2:
+            ring = LineString(feature["geometry"]["coordinates"])
+        else:
+            ring = LinearRing(feature["geometry"]["coordinates"])
         ctr = list(ring.centroid.coords)[0]
         feature["geometry"]["coordinates"] = ctr
         feature["geometry"]["type"] = "Point"
-    searchKey = list(set(keys).intersection(feature["properties"]))[0]
-    searchValue = feature["properties"][searchKey]
-    feature["properties"]["own"] = keys[searchKey][searchValue]
+    searchKeys = list(set(keys).intersection(feature["properties"]))
+    i = 0
+    searchValue = feature["properties"][searchKeys[i]]
+    while searchValue not in keys[searchKeys[i]]:
+        i += 1
+        searchValue = feature["properties"][searchKeys[i]]
+    own = keys[searchKeys[i]][searchValue]
+    feature["properties"]["own"] = own
 
 with open('poi.json', 'w') as outfile:
     json.dump(data, outfile, indent=4, sort_keys=True)
