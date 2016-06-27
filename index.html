@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>POIs in Schiltern</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css"/>
     <style>
@@ -98,7 +99,7 @@
 
                 categoryLG.addTo(map);
             }
-            var control = L.control.layers(mapLayers, overlays, {collapsed: false}).addTo(map);
+            var control = L.control.layers(mapLayers, overlays).addTo(map);
         }
     });
 
