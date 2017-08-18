@@ -1,0 +1,35 @@
+area:
+  - 48.45493657709362
+  - 15.55269241333008
+  - 48.56615721936395
+  - 15.701694488525392
+keys:
+  amenity:
+    post_office:
+      category: Postamt
+      icon: postal
+    school:
+      category: Schule
+      icon: school
+  cuisine:
+    heuriger:
+      category: Heuriger
+      icon: winetasting
+  information:
+    office:
+      category: Touristeninformation
+      icon: information
+  shop:
+    bakery:
+      category: Bäckerei
+      icon: bread
+    supermarket:
+      category: Supermarkt
+      icon: supermarket
+  tourism:
+    attraction:
+      category: Sehenswürdigkeit
+      icon: sight-2
+    museum:
+      category: Museum
+      icon: arch

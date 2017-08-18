@@ -3,22 +3,31 @@ import json
 import os.path
 import shutil
 from pprint import pprint
-
+import yaml
 import overpass
 from shapely.geometry.polygon import LinearRing, LineString
 
-from settings import *
+with open("config.yaml", 'r') as stream:
+    try:
+        config = yaml.load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+        config = False
+        exit()
+area = config["area"]
+keys = config["keys"]
 
 if not os.path.isfile("response.geo.json"):
+    areastring = "(" + ",".join(str(i) for i in area) + ")"
     request = "("
     for key in keys:
         values = keys[key]
         for value in values:
             keyValue = "'" + key + "'='" + value + "'"
             print(keyValue)
-            request += "node[" + keyValue + "]" + area + ";way[" + keyValue + "]" + area + ";"
+            request += "node[" + keyValue + "]" + areastring + ";way[" + keyValue + "]" + areastring + ";"
             icon = keys[key][value]["icon"]
-            shutil.copyfile("icons/" + icon + ".png", "images/" + icon + ".png")
+            shutil.copyfile("icons/" + icon + ".png", "public/images/" + icon + ".png")
     request += ");"
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
@@ -47,5 +56,5 @@ for feature in data["features"]:
     own = keys[searchKeys[i]][searchValue]
     feature["properties"]["own"] = own
 
-with open('poi.json', 'w') as outfile:
+with open('public/poi.json', 'w') as outfile:
     json.dump(data, outfile, indent=4, sort_keys=True)
