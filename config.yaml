@@ -8,9 +8,9 @@ keys:
     post_office:
       category: Postamt
       icon: postal
-    school:
-      category: Schule
-      icon: school
+    atm:
+      category: Geldautomat
+      icon: atm-2
   cuisine:
     heuriger:
       category: Heuriger
@@ -19,6 +19,10 @@ keys:
     office:
       category: Touristeninformation
       icon: information
+  leisure:
+    playground:
+      category: Spielplatz
+      icon: playground
   shop:
     bakery:
       category: Bäckerei

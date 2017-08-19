@@ -5,3 +5,4 @@ node_modules/
 *.json
 __pycache__/
 images/
+!additionalPois.json

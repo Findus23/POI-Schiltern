@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>POIs in Schiltern</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
-          integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
-          crossorigin=""/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet.locatecontrol/0.60.0/L.Control.Locate.min.css"
-          integrity="sha256-Ut/Deer+FQCNBJwgADKMYrWeKgTvoFFPjtuXU69pun0=" crossorigin="anonymous">
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
     <style>
         body {
             margin: 0;
@@ -22,16 +19,14 @@
 <body>
 <div id="map"></div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
-<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
-        integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
-        crossorigin=""></script>
-<script src="https://cdn.jsdelivr.net/leaflet.locatecontrol/0.60.0/L.Control.Locate.min.js"
-        integrity="sha256-8Wr00YLNKXCJnLviM/psS5KmcfzUchMixICACf+ZVG0=" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leaflet/dist/leaflet.js"></script>
+<script src="../node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+<script src="../node_modules/moment/min/moment-with-locales.min.js"></script>
+<script src="../node_modules/opening_hours/opening_hours.js"></script>
 <script>
     $(document).ready(function () {
+        moment.locale(window.navigator.userLanguage || window.navigator.language);
         var map = L.map('map').setView([48.51579416571888, 15.6255304813385], 16);
         var layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -69,7 +64,32 @@
                     layer = L.marker(center, {icon: new LeafIcon({iconUrl: 'images/' + feature.properties.own.icon + '.png'})}).addTo(map);
                 } else {
                 }
-                layer.bindPopup(feature.properties.name);
+                var popuptext = "";
+                if (feature.properties.name) {
+                    popuptext += feature.properties.name + "<br>"
+                }
+                if (feature.properties.opening_hours) {
+                    var oh = new opening_hours(feature.properties.opening_hours, {
+                        "address": {
+                            "state": "Niederösterreich",
+                            "country": "Österreich",
+                            "country_code": "at"
+                        }
+                    });
+                    if (!oh.getUnknown()) {
+                        var change = moment(oh.getNextChange());
+                        if (oh.getState()) {
+                            popuptext += "hat geöffnet<br>schließt " + change.calendar() + " (" + change.fromNow() + ")";
+                        } else {
+                            popuptext += "hat geschlossen<br>öffnet " + change.calendar() + " (" + change.fromNow() + ")";
+                        }
+                    }
+//                    console.warn(oh.getState());
+//                    popuptext += oh.getState();
+                }
+                if (popuptext) {
+                    layer.bindPopup(popuptext);
+                }
 
                 category = feature.properties.own.category;
                 // Initialize the category array if not already set.

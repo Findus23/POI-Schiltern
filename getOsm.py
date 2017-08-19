@@ -5,7 +5,8 @@ import shutil
 from pprint import pprint
 import yaml
 import overpass
-from shapely.geometry.polygon import LinearRing, LineString
+from shapely.geometry.polygon import LinearRing, LineString, Polygon
+from shapely.algorithms.polylabel import polylabel
 
 with open("config.yaml", 'r') as stream:
     try:
@@ -17,7 +18,7 @@ with open("config.yaml", 'r') as stream:
 area = config["area"]
 keys = config["keys"]
 
-if not os.path.isfile("response.geo.json"):
+if not os.path.isfile("response.geo.json") or True:
     areastring = "(" + ",".join(str(i) for i in area) + ")"
     request = "("
     for key in keys:
@@ -41,11 +42,13 @@ else:
 for feature in data["features"]:
     if feature["geometry"]["type"] == "LineString":
         if len(feature["geometry"]["coordinates"]) == 2:
-            ring = LineString(feature["geometry"]["coordinates"])
+            print("Line")
+            line = LineString(feature["geometry"]["coordinates"])
+            labelpoint = list(line.representative_point().coords)[0]
         else:
-            ring = LinearRing(feature["geometry"]["coordinates"])
-        ctr = list(ring.centroid.coords)[0]
-        feature["geometry"]["coordinates"] = ctr
+            poly = Polygon(feature["geometry"]["coordinates"])
+            labelpoint = list(polylabel(poly).coords)[0]
+        feature["geometry"]["coordinates"] = labelpoint
         feature["geometry"]["type"] = "Point"
     searchKeys = list(set(keys).intersection(feature["properties"]))
     i = 0
@@ -56,5 +59,9 @@ for feature in data["features"]:
     own = keys[searchKeys[i]][searchValue]
     feature["properties"]["own"] = own
 
+with open('additionalPois.json') as inputfile:
+    additional = json.load(inputfile)
+
+data["features"] += additional["features"]
 with open('public/poi.json', 'w') as outfile:
     json.dump(data, outfile, indent=4, sort_keys=True)
