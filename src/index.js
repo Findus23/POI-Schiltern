@@ -1,13 +1,12 @@
-import "leaflet/dist/leaflet.css"
+import "leaflet/dist/leaflet.css";
 import "./style.css";
-import poi from "../public/poi.json"
-import $ from "jquery"
-import L from "leaflet"
+import poi from "../data/poi.json";
+import L from "leaflet";
 
 const moment = require('moment');
-import opening_hours from "opening_hours"
+import opening_hours from "opening_hours";
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
     let map = L.map('map').setView([48.51579416571888, 15.6255304813385], 16);
     // let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,7 +29,8 @@ $(document).ready(function() {
 
     let geojsonLayer = L.geoJson(null, {
         pointToLayer: function(feature, latlng) {
-            return L.marker(latlng, {icon: new LeafIcon({iconUrl: 'images/' + feature.properties.own.icon + '.png'})});
+            let iconfile = require("../data/images/" + feature.properties.own.icon + '.png');
+            return L.marker(latlng, {icon: new LeafIcon({iconUrl: iconfile})});
         },
         onEachFeature: function(feature, layer) {
             // Check if feature is a polygon
@@ -43,20 +43,19 @@ $(document).ready(function() {
                 // Get center of bounds
                 let center = layer.getBounds().getCenter();
                 // Use center to put marker on map
-                layer = L.marker(center, {icon: new LeafIcon({iconUrl: 'images/' + feature.properties.own.icon + '.png'})}).addTo(map);
+                let iconfile = require("../data/images/" + feature.properties.own.icon + '.png');
+                layer = L.marker(center, {icon: new LeafIcon({iconUrl: iconfile})}).addTo(map);
             } else {
             }
             let popuptext = "";
             if (feature.properties.name) {
-                popuptext += feature.properties.name + "<br>"
+                popuptext += feature.properties.name + "<br>";
             }
             if (feature.properties.website) {
-                console.warn(feature);
                 popuptext += "<a href='" + feature.properties.website + "' target='_blank' rel='noopener'>" + feature.properties.website + "</a><br>";
             }
 
             if (feature.properties.phone) {
-                console.warn(feature);
                 popuptext += "Tel: <a href='tel:" + feature.properties.phone + "'>" + feature.properties.phone + "</a><br>";
             }
             if (feature.properties.opening_hours) {
@@ -117,4 +116,4 @@ $(document).ready(function() {
     let control = L.control.layers(mapLayers, overlays).addTo(map);
 
     // L.control.locate().addTo(map);
-});
+}, false);

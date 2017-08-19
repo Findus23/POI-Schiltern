@@ -9,3 +9,5 @@ images/
 dist/
 
 stats.json
+data/
+fetch/response.geo.json

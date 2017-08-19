@@ -1,11 +1,11 @@
 {
   "name": "karte",
   "version": "1.0.0",
-  "description": "",
+  "description": "POI um Schiltern",
   "main": "index.js",
   "dependencies": {
+    "country-language": "^0.1.7",
     "i18next-client": "^1.11.4",
-    "jquery": "^3.2.1",
     "leaflet": "^1.2.0",
     "leaflet.locatecontrol": "^0.62.0",
     "moment": "^2.18.1",
@@ -18,6 +18,8 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
+    "jshint": "^2.9.5",
+    "jshint-loader": "^0.8.4",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
@@ -25,7 +27,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
     "run": "webpack-dev-server --open",
-    "profile": "webpack --config webpack.config.js --json > stats.json"
+    "profile": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "repository": {
     "type": "git",

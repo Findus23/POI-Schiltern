@@ -28,7 +28,7 @@ if not os.path.isfile("response.geo.json") or True:
             print(keyValue)
             request += "node[" + keyValue + "]" + areastring + ";way[" + keyValue + "]" + areastring + ";"
             icon = keys[key][value]["icon"]
-            shutil.copyfile("icons/" + icon + ".png", "public/images/" + icon + ".png")
+            shutil.copyfile("../icons/" + icon + ".png", "../data/images/" + icon + ".png")
     request += ");"
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
@@ -63,5 +63,5 @@ with open('additionalPois.json') as inputfile:
     additional = json.load(inputfile)
 
 data["features"] += additional["features"]
-with open('public/poi.json', 'w') as outfile:
+with open('../data/poi.json', 'w') as outfile:
     json.dump(data, outfile, indent=4, sort_keys=True)
