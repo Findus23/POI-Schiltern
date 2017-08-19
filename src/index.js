@@ -3,17 +3,18 @@ import "./style.css";
 import poi from "../public/poi.json"
 import $ from "jquery"
 import L from "leaflet"
+
 const moment = require('moment');
 import opening_hours from "opening_hours"
 
 $(document).ready(function() {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
     let map = L.map('map').setView([48.51579416571888, 15.6255304813385], 16);
-    let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
+    // let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // }).addTo(map);
+    let layer = L.tileLayer('').addTo(map);
     let LeafIcon = L.Icon.extend({
         options: {
 //            shadowUrl: 'leaf-shadow.png',

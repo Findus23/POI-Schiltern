@@ -2,8 +2,10 @@
 icons/
 node_modules/
 
-*.json
+dist/*.json
 __pycache__/
 images/
 !additionalPois.json
 dist/
+
+stats.json
