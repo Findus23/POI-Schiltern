@@ -18,7 +18,8 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin()
     ],
     module: {
         rules: [
