@@ -32,6 +32,9 @@ keys:
     heuriger:
       category: Heuriger
       icon: winetasting
+    regional:
+      category: Gasthaus
+      icon: restaurant
   information:
     office:
       category: Touristeninformation
