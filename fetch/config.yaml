@@ -1,16 +1,33 @@
 area:
-  - 48.45493657709362
-  - 15.55269241333008
-  - 48.56615721936395
-  - 15.701694488525392
+  radius: 7000
+  lat: 48.513969429467124
+  lon: 15.628936886787415
 keys:
   amenity:
     post_office:
       category: Postamt
       icon: postal
+    post_box:
+      category: Briefkasten
+      icon: postal
+    fuel:
+      category: Tankstelle
+      icon: fillingstation
     atm:
       category: Geldautomat
       icon: atm-2
+    doctors:
+      category: Arzt
+      icon: medicine
+    pharmacy:
+      category: Apotheke
+      icon: firstaid
+#    restaurant:
+#      category: Restaurant
+#      icon: restaurant
+    taxi:
+      category: Taxi-Stand
+      icon: taxi
   cuisine:
     heuriger:
       category: Heuriger
@@ -23,6 +40,9 @@ keys:
     playground:
       category: Spielplatz
       icon: playground
+    sea_bath:
+      category: Badeteich
+      icon: water
   shop:
     bakery:
       category: Bäckerei
@@ -37,3 +57,7 @@ keys:
     museum:
       category: Museum
       icon: arch
+  craft:
+    brewery:
+      category: Brauerei
+      icon: brewery1

@@ -4,19 +4,26 @@ import moment from "moment";
 
 function getPopupText(feature) {
     moment.locale(window.navigator.userLanguage || window.navigator.language);
-    let popuptext = "";
-    if (feature.properties.name) {
-        popuptext += feature.properties.name + "<br>";
+    let popuptext = [];
+    let prop = feature.properties;
+    if (prop.name) {
+        popuptext.push(prop.name);
+    } else {
+        popuptext.push(prop.own.category);
     }
-    if (feature.properties.website) {
-        popuptext += "<a href='" + feature.properties.website + "' target='_blank' rel='noopener'>" + feature.properties.website + "</a><br>";
+    if (prop.website) {
+        popuptext.push("<a href='" + prop.website + "' target='_blank' rel='noopener'>" + prop.website + "</a>");
     }
 
-    if (feature.properties.phone) {
-        popuptext += "Tel: <a href='tel:" + feature.properties.phone + "'>" + feature.properties.phone + "</a><br>";
+    if (prop.phone) {
+        popuptext.push("Tel: <a href='tel:" + prop.phone + "'>" + prop.phone + "</a>");
+
     }
-    if (feature.properties.opening_hours) {
-        let oh = new opening_hours(feature.properties.opening_hours, {
+    if (prop.email) {
+        popuptext.push("Tel: <a href='tel:" + prop.email + "'>" + prop.email + "</a>");
+    }
+    if (prop.opening_hours) {
+        let oh = new opening_hours(prop.opening_hours, {
             "address": {
                 "state": "Niederösterreich",
                 "country": "Österreich",
@@ -24,15 +31,18 @@ function getPopupText(feature) {
             }
         });
         if (!oh.getUnknown()) {
+            let openText;
             let change = moment(oh.getNextChange());
             if (oh.getState()) {
-                popuptext += "hat geöffnet<br>schließt " + change.calendar() + " (" + change.fromNow() + ")";
+                openText = "hat geöffnet<br>schließt ";
             } else {
-                popuptext += "hat geschlossen<br>öffnet " + change.calendar() + " (" + change.fromNow() + ")";
+                openText = "hat geschlossen<br>öffnet ";
             }
+            openText += change.calendar() + " (" + change.fromNow() + ")";
+            popuptext.push(openText);
         }
     }
-    return popuptext;
+    return popuptext.join("<br>");
 }
 
 export default getPopupText;

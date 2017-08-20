@@ -6,12 +6,12 @@ import L from "leaflet";
 import getPopupText from "./popup";
 
 document.addEventListener('DOMContentLoaded', function() {
-    let map = L.map('map').setView([48.51579416571888, 15.6255304813385], 16);
+    let map = L.map('map').setView([48.51579416571888, 15.6255304813385], 13);
     let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    });
-    let blankLayer = L.tileLayer('').addTo(map);
+    }).addTo(map);
+    let blankLayer = L.tileLayer('');
     let LeafIcon = L.Icon.extend({
         options: {
             iconAnchor: [16, 35],
@@ -29,9 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         onEachFeature: function(feature, layer) {
             let popuptext = getPopupText(feature);
-            if (popuptext) {
-                layer.bindPopup(popuptext);
-            }
+            layer.bindPopup(popuptext);
             category = feature.properties.own.category;
             // Initialize the category array if not already set.
             if (typeof categories[category] === "undefined") {
@@ -41,13 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     let mapLayers = {
-        "Leer": blankLayer,
+        // "Leer": blankLayer,
         'Standard': layer
     };
 
     let attribution = function() {
         return 'Icons von <a href="https://mapicons.mapsmarker.com">mapicons.mapsmarker.com</a> ' +
-            '(<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY SA 3.0</a>)';
+            '(<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY SA 3.0</a>)'+ " | "+
+            '<a href="main.licenses.txt" target="_blank">Lizenzen</a>';
     };
     let overlays = {};
     let categoryName, categoryArray, categoryLG;

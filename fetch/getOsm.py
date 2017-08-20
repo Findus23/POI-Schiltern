@@ -19,19 +19,21 @@ area = config["area"]
 keys = config["keys"]
 
 if not os.path.isfile("response.geo.json") or True:
-    areastring = "(" + ",".join(str(i) for i in area) + ")"
+    areastring = "(around:{radius},{lat},{lon})".format(radius=area["radius"], lat=area["lat"], lon=area["lon"])
     request = "("
     for key in keys:
         values = keys[key]
         for value in values:
-            keyValue = "'" + key + "'='" + value + "'"
-            print(keyValue)
-            request += "node[" + keyValue + "]" + areastring + ";way[" + keyValue + "]" + areastring + ";"
+            keyValue = "'{key}'='{value}'".format(key=key, value=value)
+            request += "node[{keyValue}]{areastring};\nway[{keyValue}]{areastring};\n" \
+                .format(keyValue=keyValue, areastring=areastring)
             icon = keys[key][value]["icon"]
             shutil.copyfile("../icons/" + icon + ".png", "../data/images/" + icon + ".png")
     request += ");"
+    print(request)
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
+    print("request finished")
     with open('response.geo.json', 'w') as outfile:
         json.dump(data, outfile, indent=4, sort_keys=True)
 

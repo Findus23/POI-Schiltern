@@ -1,6 +1,7 @@
 const path = require('path');
 let webpack = require('webpack');
-
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+let LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 
 module.exports = {
     entry: './src/index.js',
@@ -8,18 +9,25 @@ module.exports = {
         filename: 'bundle.js?hash=[hash]',
         path: path.resolve(__dirname, 'dist')
     },
-    devtool: 'inline-source-map',
+    devtool: 'eval-source-map',
     devServer: {
         contentBase: './dist',
         hot: true
     },
     plugins: [
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin()
+        new webpack.NamedModulesPlugin(),
+        new HtmlWebpackPlugin({
+            title: 'Umgebungsplan Schiltern',
+            template: 'index.ejs',
+            devServer: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8081',
+        }),
+        new webpack.IgnorePlugin(/^jquery/),
+        new LicenseWebpackPlugin({
+            pattern: /^(MIT|ISC|BSD.*)$/,
+            unacceptablePattern: /GPL/,
+            abortOnUnacceptableLicense: true
+        })
     ],
     module: {
         rules: [
@@ -43,7 +51,7 @@ module.exports = {
             {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: [
-                    'file-loader'
+                    'url-loader'
                 ]
             },
             {
@@ -57,8 +65,10 @@ module.exports = {
                 ]
             }
         ]
-    },
-};
+    }
+    ,
+}
+;
 
 
 if (process.env.NODE_ENV === 'production') {
