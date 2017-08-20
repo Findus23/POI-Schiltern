@@ -11,3 +11,4 @@ dist/
 stats.json
 data/
 fetch/response.geo.json
+src/apikey.js

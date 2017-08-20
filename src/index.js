@@ -3,6 +3,8 @@ import "./style.css";
 import poi from "../data/poi.json";
 import L from "leaflet";
 
+import apiKey from "./apikey"; //optional
+
 import getPopupText from "./popup";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,6 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    let Thunderforest_OpenCycleMap = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={apikey}', {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        apikey: apiKey,
+        maxZoom: 22
+    });
+    let Thunderforest_Outdoors = L.tileLayer('http://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey={apikey}', {
+        attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        apikey: apiKey,
+        maxZoom: 22
+    });
     let blankLayer = L.tileLayer('');
     let LeafIcon = L.Icon.extend({
         options: {
@@ -40,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     let mapLayers = {
         // "Leer": blankLayer,
-        'Standard': layer
+        'Standard': layer,
+        "Wanderkarte": Thunderforest_Outdoors,
+        "Fahrradkarte": Thunderforest_OpenCycleMap
     };
 
     let attribution = function() {
