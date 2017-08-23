@@ -1,23 +1,5 @@
 {
   "type": "FeatureCollection",
   "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Wilma Hammerle",
-        "category": "Bäckerei",
-        "own": {
-          "category": "Bäckerei",
-          "icon": "bread"
-        }
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          15.628936886787415,
-          48.513969429467124
-        ]
-      }
-    }
   ]
 }

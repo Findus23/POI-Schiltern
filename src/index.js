@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Icons von <a href="https://mapicons.mapsmarker.com">mapicons.mapsmarker.com</a> ' +
             '(<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY SA 3.0</a>)' + " | " +
             '<a href="main.licenses.txt" target="_blank">Lizenzen</a>+' +
-            '<a href="https://github.com/Findus23/POI-Schiltern" target="_blank">Source</a>';
+            '<a href="https://github.com/Findus23/POI-Schiltern" target="_blank">Source</a>' +
+            ' | <a href="https://www.ferienhaus-schiltern.at/impressum/" target="_blank">Impressum und Datenschutz</a>';
     };
     let overlays = {};
     let categoryName, categoryArray, categoryLG;
