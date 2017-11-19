@@ -8,7 +8,7 @@
     "i18next-client": "^1.11.5",
     "leaflet": "^1.2.0",
     "leaflet.locatecontrol": "^0.62.0",
-    "moment": "^2.19.1",
+    "moment": "^2.19.2",
     "opening_hours": "^3.5.0"
   },
   "devDependencies": {
@@ -25,7 +25,7 @@
     "style-loader": "^0.19.0",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
+    "webpack-dev-server": "^2.9.4"
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
