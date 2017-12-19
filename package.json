@@ -8,7 +8,7 @@
     "i18next-client": "^1.11.5",
     "leaflet": "^1.2.0",
     "leaflet.locatecontrol": "^0.62.0",
-    "moment": "^2.19.1",
+    "moment": "^2.20.1",
     "opening_hours": "^3.5.0"
   },
   "devDependencies": {
