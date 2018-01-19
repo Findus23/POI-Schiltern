@@ -6,17 +6,20 @@
   "dependencies": {
     "country-language": "^0.1.7",
     "i18next-client": "^1.11.5",
-    "leaflet": "^1.2.0",
+    "leaflet": "^1.3.1",
     "leaflet.locatecontrol": "^0.62.0",
     "moment": "^2.20.1",
     "opening_hours": "^3.5.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "cross-env": "^5.1.1",
-    "css-loader": "^0.28.7",
+    "@babel/core": "^7.0.0-beta.38",
+    "@babel/polyfill": "^7.0.0-beta.38",
+    "@babel/preset-env": "^7.0.0-beta.38",
+    "babel-loader": "^8.0.0-beta.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "cross-env": "^5.1.3",
+    "css-loader": "^0.28.9",
+    "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "jshint": "^2.9.5",
@@ -25,12 +28,13 @@
     "style-loader": "^0.19.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^2.11.0",
+    "webpack-subresource-integrity": "^1.0.3"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --config webpack.config.js",
-    "run": "webpack-dev-server --open",
-    "profile": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --content-base dist/ --open --hot",
+    "json": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "repository": {
     "type": "git",
