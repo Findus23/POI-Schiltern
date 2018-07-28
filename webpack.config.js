@@ -3,8 +3,8 @@ let webpack = require('webpack');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 let LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 let SriPlugin = require('webpack-subresource-integrity');
-let ExtractTextPlugin = require("extract-text-webpack-plugin");
 let CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: './src/index.js',
@@ -19,6 +19,7 @@ module.exports = {
         noInfo: true,
         overlay: true
     },
+    mode: process.env.NODE_ENV,
     plugins: [
         new webpack.NamedModulesPlugin(),
         new HtmlWebpackPlugin({
@@ -31,7 +32,7 @@ module.exports = {
             pattern: /^(MIT|ISC|BSD.*)$/,
             unacceptablePattern: /GPL/,
             abortOnUnacceptableLicense: true,
-            perChunkOutput:false
+            perChunkOutput: false
         }),
         new SriPlugin({
             hashFuncNames: ['sha256'],
@@ -56,17 +57,20 @@ module.exports = {
                                         ]
                                     }
                                 }
-                            ]
-                        ]
+                            ],
+                        ],
+                        "plugins": ["syntax-dynamic-import"]
                     }
                 }
             },
             {
                 test: /\.css$/,
-                use: (process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                }) : [
+                use: (process.env.NODE_ENV === 'production' ? [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    "css-loader"
+                ] : [
                     {loader: "style-loader"},
                     {loader: "css-loader"}
                 ])
@@ -76,16 +80,6 @@ module.exports = {
                 use: [
                     'url-loader'
                 ]
-            },
-            {
-                test: /\.js$/, // include .js files
-                enforce: "pre", // preload the jshint loader
-                exclude: /node_modules/, // exclude any and all files in the node_modules folder
-                use: [
-                    {
-                        loader: "jshint-loader"
-                    }
-                ]
             }
         ]
     }
@@ -93,6 +87,12 @@ module.exports = {
 
 
 if (process.env.NODE_ENV === 'production') {
+    module.exports.optimization = {
+        splitChunks: {
+            name: "commons"
+        },
+        minimize: true
+    };
     module.exports.devtool = '#source-map';
     // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
@@ -107,15 +107,14 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
-            }
-        }),
         new webpack.LoaderOptionsPlugin({
             minimize: true
         }),
-        new ExtractTextPlugin("style-[hash].css"),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
     ])
 }
