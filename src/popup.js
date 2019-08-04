@@ -20,7 +20,7 @@ function getPopupText(feature) {
 
     }
     if (prop.email) {
-        popuptext.push("Tel: <a href='tel:" + prop.email + "'>" + prop.email + "</a>");
+        popuptext.push("E-Mail: <a href='tel:" + prop.email + "'>" + prop.email + "</a>");
     }
     if (prop.opening_hours) {
         let oh = new opening_hours(prop.opening_hours, {
@@ -38,7 +38,11 @@ function getPopupText(feature) {
             } else {
                 openText = "hat geschlossen<br>öffnet ";
             }
-            openText += change.calendar() + " (" + change.fromNow() + ")";
+            if (oh.getNextChange()) {
+                openText += change.calendar() + " (" + change.fromNow() + ")";
+            } else {
+                openText += "nie"
+            }
             popuptext.push(openText);
         }
     }
