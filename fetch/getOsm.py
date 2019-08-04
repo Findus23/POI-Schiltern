@@ -2,15 +2,15 @@
 import json
 import os.path
 import shutil
-from pprint import pprint
-import yaml
+
 import overpass
-from shapely.geometry.polygon import LinearRing, LineString, Polygon
+import yaml
 from shapely.algorithms.polylabel import polylabel
+from shapely.geometry.polygon import LineString, Polygon
 
 with open("config.yaml", 'r') as stream:
     try:
-        config = yaml.load(stream)
+        config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
         print(exc)
         config = False
@@ -61,6 +61,12 @@ for feature in data["features"]:
     own = keys[searchKeys[i]][searchValue]
     feature["properties"]["own"] = own
 
+filteredFeatures = []
+for feature in data["features"]:
+    if not ("name" in feature["properties"] and "Telefonzelle" in feature["properties"]["name"]):
+        filteredFeatures.append(feature)
+
+data["features"] = filteredFeatures
 with open('additionalPois.json') as inputfile:
     additional = json.load(inputfile)
 
