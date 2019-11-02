@@ -9,7 +9,7 @@ import getPopupText from "./popup";
 
 document.addEventListener('DOMContentLoaded', function() {
     let map = L.map('map').setView([48.51579416571888, 15.6255304813385], 13);
-    let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    let layer = L.tileLayer('https://maps.lw1.at/tiles/1.0.0/osm/GLOBAL_MERCATOR/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
