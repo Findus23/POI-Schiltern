@@ -1,15 +1,15 @@
+// @ts-ignore
 import opening_hours from "opening_hours";
-import moment from "moment";
+import {toName} from "./utils";
+import { DateTime } from 'luxon';
 
-
-function getPopupText(feature) {
-    moment.locale(window.navigator.userLanguage || window.navigator.language);
+export function getPopupText(feature: GeoJSON.Feature) {
     let popuptext = [];
     let prop = feature.properties;
     if (prop.name) {
         popuptext.push(prop.name);
     } else {
-        popuptext.push(prop.own.category);
+        popuptext.push(toName(prop.key, prop.value));
     }
     if (prop.website) {
         popuptext.push("<a href='" + prop.website + "' target='_blank' rel='noopener'>" + prop.website + "</a>");
@@ -32,14 +32,14 @@ function getPopupText(feature) {
         });
         if (!oh.getUnknown()) {
             let openText;
-            let change = moment(oh.getNextChange());
+            let change = DateTime.fromJSDate(oh.getNextChange());
             if (oh.getState()) {
                 openText = "hat geöffnet<br>schließt ";
             } else {
                 openText = "hat geschlossen<br>öffnet ";
             }
             if (oh.getNextChange()) {
-                openText += change.calendar() + " (" + change.fromNow() + ")";
+                openText += change.toRelativeCalendar() + " (" + change.toRelative() + ")";
             } else {
                 openText += "nie"
             }
@@ -49,4 +49,3 @@ function getPopupText(feature) {
     return popuptext.join("<br>");
 }
 
-export default getPopupText;

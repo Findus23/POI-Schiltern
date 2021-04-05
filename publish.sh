@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -rvzP ./dist/ lukas@lw1.at:/var/www/karte/ --fuzzy --delete-after -v
+rsync -rvzP ./public/ lukas@lw1.at:/var/www/karte/ --fuzzy --delete-after -v

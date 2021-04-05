@@ -4,63 +4,29 @@ area:
   lon: 15.628936886787415
 keys:
   amenity:
-    post_office:
-      category: Postamt
-      icon: postal
-    post_box:
-      category: Briefkasten
-      icon: postal
-    fuel:
-      category: Tankstelle
-      icon: fillingstation
-    atm:
-      category: Geldautomat
-      icon: atm-2
-    doctors:
-      category: Arzt
-      icon: medicine
-    pharmacy:
-      category: Apotheke
-      icon: firstaid
-#    restaurant:
-#      category: Restaurant
-#      icon: restaurant
-    taxi:
-      category: Taxi-Stand
-      icon: taxi
+    - cafe
+    - post_office
+    - post_box
+    - fuel
+    - atm
+    - doctors
+    - pharmacy
+    - taxi
   cuisine:
-    heuriger:
-      category: Heuriger
-      icon: winetasting
-    regional:
-      category: Gasthaus
-      icon: restaurant
+    - heuriger
+    - regional
   information:
-    office:
-      category: Touristeninformation
-      icon: information
+    - office
   leisure:
-    playground:
-      category: Spielplatz
-      icon: playground
-    sea_bath:
-      category: Badeteich
-      icon: water
+    - playground
+    - sea_bath
   shop:
-    bakery:
-      category: Bäckerei
-      icon: bread
-    supermarket:
-      category: Supermarkt
-      icon: supermarket
+    - bakery
+    - supermarket
   tourism:
-    attraction:
-      category: Sehenswürdigkeit
-      icon: sight-2
-    museum:
-      category: Museum
-      icon: arch
+    - attraction
+    - museum
   craft:
-    brewery:
-      category: Brauerei
-      icon: brewery1
+    - brewery
+  historic:
+    - castle

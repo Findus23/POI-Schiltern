@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import json
 import os.path
-import shutil
 
 import overpass
 import yaml
@@ -24,22 +23,31 @@ if not os.path.isfile("response.geo.json") or True:
     for key in keys:
         values = keys[key]
         for value in values:
-            keyValue = "'{key}'='{value}'".format(key=key, value=value)
-            request += "node[{keyValue}]{areastring};\nway[{keyValue}]{areastring};\n" \
-                .format(keyValue=keyValue, areastring=areastring)
-            icon = keys[key][value]["icon"]
-            shutil.copyfile("../icons/" + icon + ".png", "../data/images/" + icon + ".png")
+            keyValue = f"'{key}'='{value}'"
+            request += f"node[{keyValue}]{areastring};\n"
+            request += f"way[{keyValue}]{areastring};\n"
     request += ");"
+    request += "out geom;"
     print(request)
     api = overpass.API()
     data = api.Get(request, responseformat="geojson")
     print("request finished")
     with open('response.geo.json', 'w') as outfile:
-        json.dump(data, outfile, indent=4, sort_keys=True)
+        json.dump(data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
 else:
     with open('response.geo.json') as inputfile:
         data = json.load(inputfile)
+
+filteredFeatures = []
+for feature in data["features"]:
+    if "name" in feature["properties"] and "Telefonzelle" in feature["properties"]["name"]:
+        continue
+    if not feature["geometry"]["coordinates"]:
+        continue
+    filteredFeatures.append(feature)
+
+data["features"] = filteredFeatures
 
 for feature in data["features"]:
     if feature["geometry"]["type"] == "LineString":
@@ -58,18 +66,13 @@ for feature in data["features"]:
     while searchValue not in keys[searchKeys[i]]:
         i += 1
         searchValue = feature["properties"][searchKeys[i]]
-    own = keys[searchKeys[i]][searchValue]
-    feature["properties"]["own"] = own
+    # own = keys[searchKeys[i]][searchValue]
+    feature["properties"]["key"] = searchKeys[i]
+    feature["properties"]["value"] = searchValue
 
-filteredFeatures = []
-for feature in data["features"]:
-    if not ("name" in feature["properties"] and "Telefonzelle" in feature["properties"]["name"]):
-        filteredFeatures.append(feature)
-
-data["features"] = filteredFeatures
 with open('additionalPois.json') as inputfile:
     additional = json.load(inputfile)
 
 data["features"] += additional["features"]
 with open('../data/poi.json', 'w') as outfile:
-    json.dump(data, outfile, indent=4, sort_keys=True)
+    json.dump(data, outfile, indent=4, sort_keys=True, ensure_ascii=False)

@@ -13,3 +13,5 @@ data/
 fetch/response.geo.json
 src/apikey.js
 fetch/poi.json
+public
+!public/index.html
