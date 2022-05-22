@@ -6,7 +6,7 @@ authors = ["Lukas Winkler <git@lw1.at>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-PyYAML = "^5.3.1"
+PyYAML = "^6.0"
 shapely = "^1.7.0"
 overpass = "^0.7"
 
