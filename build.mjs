@@ -1,8 +1,8 @@
-const esbuild = require('esbuild')
+import * as esbuild from 'esbuild'
 
 switch (process.argv[2]) {
     case "build":
-        esbuild.build({
+        await esbuild.build({
             entryPoints: ["src/index.ts"],
             target: "es2020",
             bundle: true,
@@ -16,10 +16,7 @@ switch (process.argv[2]) {
         })
         break
     case "serve":
-        esbuild.serve({
-            port: 1234,
-            servedir: "public"
-        }, {
+        let ctx = await esbuild.context({
             entryPoints: ['src/index.ts'],
             bundle: true,
             target: "es2020",
@@ -29,7 +26,11 @@ switch (process.argv[2]) {
                 ".png": "file"
             }
             // minify:true
-        }).catch(() => process.exit(1))
+        })
+        await ctx.serve({
+            port: 1234,
+            servedir: "public"
+        },).catch(() => process.exit(1))
         break
     default:
         console.log(process.argv)
