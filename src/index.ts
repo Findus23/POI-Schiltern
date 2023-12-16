@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const OpenStreetMapMapnik = L.tileLayer('https://maps.lw1.at/tiles/1.0.0/osm/GLOBAL_MERCATOR/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    });
     const BasemapATbasemap = L.tileLayer("https://maps.lw1.at/tiles/1.0.0/basemap/GLOBAL_MERCATOR/{z}/{x}/{y}.{format}", {
         maxZoom: 19,
         attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
         maxZoom: 20,
         attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
+    const Tracestack = L.tileLayer(
+        'https://maps.lw1.at/tiles/1.0.0/tracestack/webmercator_hq/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, <a href="https://worldcover2021.esa.int">ESA WorldCover</a>; Maps © <a href="https://www.tracestrack.com/">Tracestrack</a>'
+        }
+    )
+    Tracestack.addTo(map);
     let LeafIcon = L.Icon.extend({
         options: {
             iconAnchor: [16, 35],
@@ -69,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     let mapLayers = {
         // "Leer": blankLayer,
-        'Standard': OpenStreetMapMapnik,
+        'Standard': Tracestack,
+        'Klassik': OpenStreetMapMapnik,
         "Geländekarte": CyclOSM,
         // "Hell": Forte,
         // "Einfach": Piano,
